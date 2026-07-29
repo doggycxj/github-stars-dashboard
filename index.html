@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GitHub Star 儀表板</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.0.0/dist/tabler-icons.min.css">
+
+<!-- 防閃爍：先讀上次選的主題 -->
+<script>
+  (function(){
+    var t = localStorage.getItem('stars-theme') || 'light';
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+</script>
+
+<style>
+  /* ---------- 設計變數：light 預設 / dark 覆寫 ---------- */
+  :root{
+    --bg:#ffffff; --bg2:#f6f8fa; --bg3:#eef1f5;
+    --text:#1f2328; --text2:#59636e; --text3:#8b949e;
+    --border:#d0d7de; --brand:#0969da; --brand-bg:#ddf4ff;
+    --radius:6px; --shadow:0 1px 3px rgba(0,0,0,0.06);
+    --font-main:'Inter', -apple-system, 'Segoe UI', 'Noto Sans TC', sans-serif;
+    --font-mono:'JetBrains Mono', 'Fira Code', monospace;
+  }
+  [data-theme="dark"]{
+    --bg:#0d1117; --bg2:#161b22; --bg3:#21262d;
+    --text:#e6edf3; --text2:#8b949e; --text3:#6e7681;
+    --border:#30363d; --brand:#2f81f7; --brand-bg:#1c2b3f;
+    --shadow:0 1px 3px rgba(0,0,0,0.3);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{background:var(--bg); color:var(--text); font-family:var(--font-main); line-height:1.5;}
+  a{color:inherit; text-decoration:none;}
+
+  header{
+    position:sticky; top:0; z-index:20;
+    background:var(--bg); border-bottom:1px solid var(--border);
+    padding:14px 24px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  }
+  .title{font-weight:600; font-size:15px; white-space:nowrap;}
+  .theme-toggle{
+    display:flex; gap:6px; margin-left:auto;
+  }
+  .theme-toggle button{
+    background:transparent; border:1px solid var(--border); color:var(--text3);
+    padding:4px 8px; font-size:14px; cursor:pointer; border-radius:var(--radius); transition:all .2s;
+  }
+  .theme-toggle button:hover{color:var(--text); border-color:var(--brand);}
+  .theme-toggle button.active{background:var(--brand); color:#fff; border-color:var(--brand); font-weight:bold;}
+
+  #search{
+    flex:1; min-width:180px; max-width:420px;
+    background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius);
+    color:var(--text); font-family:var(--font-mono); font-size:13px;
+    padding:9px 12px; outline:none;
+  }
+  #search:focus{border-color:var(--brand);}
+  select#sort{
+    background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius);
+    color:var(--text); font-family:var(--font-mono); font-size:12px; padding:9px 10px;
+  }
+  .meta{font-family:var(--font-mono); font-size:12px; color:var(--text2); white-space:nowrap;}
+  .meta b{color:var(--text);}
+
+  .layout{display:flex; align-items:flex-start; max-width:1400px; margin:0 auto;}
+  nav{
+    width:250px; flex-shrink:0;
+    position:sticky; top:60px; max-height:calc(100vh - 60px); overflow-y:auto;
+    padding:18px 12px 40px; border-right:1px solid var(--border);
+  }
+  nav .nav-title{font-family:var(--font-mono); font-size:11px; letter-spacing:.05em; color:var(--text3); text-transform:uppercase; padding:4px 10px 10px;}
+  .cat-btn{
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+    width:100%; text-align:left; background:transparent; border:1px solid transparent;
+    border-radius:var(--radius); padding:9px 10px; margin-bottom:2px; cursor:pointer;
+    color:var(--text2); font-size:13px; font-family:var(--font-main);
+  }
+  .cat-btn:hover{background:var(--bg2); color:var(--text);}
+  .cat-btn.active{background:var(--brand-bg); color:var(--brand); font-weight:500;}
+  .cat-btn .num{font-family:var(--font-mono); font-size:11px; color:var(--text3); background:var(--bg2); border-radius:4px; padding:2px 6px;}
+  .cat-btn.active .num{color:var(--brand); background:var(--bg);}
+
+  main{flex:1; min-width:0; padding:24px 28px 80px;}
+  section{margin-bottom:36px;}
+  .sec-head{display:flex; align-items:baseline; gap:10px; margin-bottom:14px; padding-bottom:8px; border-bottom:1px solid var(--border);}
+  .sec-head h2{font-size:16px; margin:0; font-weight:600;}
+  .sec-head .count{font-family:var(--font-mono); font-size:12px; color:var(--text3);}
+
+  .grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:12px;}
+  .card{
+    background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius);
+    padding:14px 15px; display:flex; flex-direction:column; gap:7px; transition:.15s;
+  }
+  .card:hover{border-color:var(--brand); transform:translateY(-1px); box-shadow:var(--shadow);}
+  .card-top{display:flex; align-items:flex-start; justify-content:space-between; gap:8px;}
+  .repo-name{font-family:var(--font-mono); font-size:13.5px; font-weight:500; word-break:break-word;}
+  .repo-name .owner{color:var(--text3);}
+  .led{width:8px; height:8px; border-radius:50%; flex-shrink:0; margin-top:5px; border:1px solid var(--border);}
+  .led.fresh{background:var(--brand); border-color:var(--brand);}
+  .led.recent{background:var(--text2); border-color:var(--text2);}
+  .led.stale{background:transparent;}
+  .led.none{background:transparent; border-style:dashed;}
+  .desc{font-size:12.5px; color:var(--text2); line-height:1.5; min-height:32px;}
+  .card-foot{display:flex; align-items:center; justify-content:space-between; gap:8px; font-family:var(--font-mono); font-size:11px; color:var(--text3); margin-top:auto; padding-top:6px;}
+  .release-tag{color:var(--text); background:var(--bg3); border:1px solid var(--border); border-radius:4px; padding:2px 6px;}
+  .release-tag.none{color:var(--text3); border-style:dashed;}
+
+  .empty{color:var(--text3); font-family:var(--font-mono); font-size:13px; padding:60px 24px; text-align:center;}
+  .empty code{color:var(--brand);}
+
+  footer{max-width:1400px; margin:0 auto; padding:20px 28px; border-top:1px solid var(--border); font-family:var(--font-mono); font-size:12px; color:var(--text3);}
+
+  @media (max-width:760px){
+    nav{display:none;}
+    .layout{display:block;}
+    main{padding:18px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="title">🗂️ GitHub Star 儀表板</div>
+  <input id="search" type="text" placeholder="搜尋 repo 名稱或描述…">
+  <select id="sort">
+    <option value="release">依最新 Release 排序</option>
+    <option value="stars">依星數排序</option>
+    <option value="name">依名稱排序</option>
+  </select>
+  <div class="meta" id="metaCount"></div>
+  <div class="theme-toggle">
+    <button data-theme-btn="light" title="淺色"><i class="ti ti-sun"></i></button>
+    <button data-theme-btn="dark" title="深色"><i class="ti ti-moon"></i></button>
+  </div>
+</header>
+
+<div class="layout">
+  <nav id="rack"></nav>
+  <main id="main">
+    <div class="empty">載入中…</div>
+  </main>
+</div>
+
+<footer id="footerMeta">GitHub Star 儀表板</footer>
+
+<script>
+/* ---------- 主題切換（自成一套，不依賴任何外部檔案） ---------- */
+(function(){
+  var buttons = document.querySelectorAll('[data-theme-btn]');
+  function apply(theme){
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('stars-theme', theme);
+    buttons.forEach(function(b){
+      b.classList.toggle('active', b.dataset.themeBtn === theme);
+    });
+  }
+  apply(localStorage.getItem('stars-theme') || 'light');
+  buttons.forEach(function(b){
+    b.addEventListener('click', function(){ apply(b.dataset.themeBtn); });
+  });
+})();
+
+/* ---------- 資料渲染 ---------- */
+let DATA = null;
+let activeCategory = 'all';
+
+async function loadData(){
+  const candidates = ['stars-data.json', 'stars-data.sample.json'];
+  for(const file of candidates){
+    try{
+      const res = await fetch(file, {cache:'no-store'});
+      if(res.ok){ DATA = await res.json(); DATA._source = file; return true; }
+    }catch(e){ /* try next */ }
+  }
+  return false;
+}
+
+function daysAgo(iso){ if(!iso) return Infinity; return (Date.now() - new Date(iso).getTime()) / 86400000; }
+function ledClass(iso){ if(!iso) return 'none'; const d = daysAgo(iso); if(d<=90) return 'fresh'; if(d<=365) return 'recent'; return 'stale'; }
+function fmtDate(iso){ if(!iso) return null; return new Date(iso).toISOString().slice(0,10); }
+function escapeHtml(s){ if(!s) return ''; return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function renderRack(){
+  const rack = document.getElementById('rack');
+  const cats = DATA.categories;
+  const counts = {};
+  DATA.repos.forEach(r => counts[r.category] = (counts[r.category]||0)+1);
+
+  let html = `<div class="nav-title">分類</div>`;
+  html += `<button class="cat-btn ${activeCategory==='all'?'active':''}" data-cat="all">
+      <span>全部</span><span class="num">${String(DATA.repos.length).padStart(3,'0')}</span></button>`;
+  Object.keys(cats).forEach(id => {
+    if(!counts[id]) return;
+    html += `<button class="cat-btn ${activeCategory===id?'active':''}" data-cat="${id}">
+        <span>${escapeHtml(cats[id])}</span><span class="num">${String(counts[id]).padStart(3,'0')}</span></button>`;
+  });
+  rack.innerHTML = html;
+  rack.querySelectorAll('.cat-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{ activeCategory = btn.dataset.cat; render(); });
+  });
+}
+
+function render(){
+  const q = document.getElementById('search').value.trim().toLowerCase();
+  const sortBy = document.getElementById('sort').value;
+  const cats = DATA.categories;
+
+  let repos = DATA.repos.filter(r=>{
+    if(activeCategory !== 'all' && r.category !== activeCategory) return false;
+    if(!q) return true;
+    return r.full_name.toLowerCase().includes(q) ||
+           (r.description||'').toLowerCase().includes(q) ||
+           (r.note||'').toLowerCase().includes(q);
+  });
+
+  document.getElementById('metaCount').innerHTML =
+    `<b>${repos.length}</b> / ${DATA.repos.length}` +
+    (DATA.generated_at ? ` · 更新於 ${fmtDate(DATA.generated_at)}` : ` · 尚未抓取 release`);
+
+  const groups = {};
+  repos.forEach(r => { (groups[r.category] = groups[r.category]||[]).push(r); });
+
+  const order = Object.keys(cats);
+  let main = '';
+  order.forEach(catId=>{
+    const list = groups[catId];
+    if(!list || !list.length) return;
+    list.sort((a,b)=>{
+      if(sortBy==='stars') return (b.stars||0)-(a.stars||0);
+      if(sortBy==='name') return a.full_name.localeCompare(b.full_name);
+      const da = a.release_date ? new Date(a.release_date).getTime() : -1;
+      const db = b.release_date ? new Date(b.release_date).getTime() : -1;
+      return db - da;
+    });
+
+    main += `<section><div class="sec-head"><h2>${escapeHtml(cats[catId])}</h2><span class="count">${list.length}</span></div><div class="grid">`;
+
+    list.forEach(r=>{
+      const [owner, repo] = r.full_name.split('/');
+      const tag = r.release_tag
+        ? `<span class="release-tag">${escapeHtml(r.release_tag)}</span>`
+        : `<span class="release-tag none">no release</span>`;
+      const dateStr = fmtDate(r.release_date);
+      main += `
+        <a class="card" href="${r.html_url}" target="_blank" rel="noopener">
+          <div class="card-top">
+            <div class="repo-name"><span class="owner">${escapeHtml(owner)}/</span>${escapeHtml(repo)}</div>
+            <div class="led ${ledClass(r.release_date)}" title="${dateStr ? '最新 release: '+dateStr : '無 release 紀錄'}"></div>
+          </div>
+          <div class="desc">${escapeHtml(r.note || r.description) || '<span style="opacity:.5">（尚未取得描述）</span>'}</div>
+          <div class="card-foot">
+            ${tag}
+            <span>${dateStr ? dateStr : ''}</span>
+            <span>${r.stars != null ? '★ '+r.stars : ''}</span>
+          </div>
+        </a>`;
+    });
+    main += `</div></section>`;
+  });
+
+  document.getElementById('main').innerHTML = main || `<div class="empty">沒有符合的結果</div>`;
+}
+
+async function init(){
+  const ok = await loadData();
+  if(!ok){
+    document.getElementById('main').innerHTML = `<div class="empty">
+      找不到 <code>stars-data.json</code>。<br><br>
+      1) 先執行 <code>fetch-releases.ps1</code> 產生資料，或直接用內附的範例資料。<br>
+      2) 用本地伺服器開啟這個資料夾，例如 <code>http-server -p 8000</code>，<br>
+      再瀏覽 <code>http://localhost:8000/index.html</code>（file:// 直接開會被瀏覽器擋下 fetch）。
+      </div>`;
+    return;
+  }
+  renderRack();
+  render();
+  document.getElementById('search').addEventListener('input', render);
+  document.getElementById('sort').addEventListener('change', render);
+  document.getElementById('footerMeta').textContent =
+    DATA.generated_at ? `資料更新於 ${fmtDate(DATA.generated_at)} · 共 ${DATA.repos.length} 個 repo` : `共 ${DATA.repos.length} 個 repo（尚未抓取 release 資料）`;
+}
+init();
+</script>
+</body>
+</html>
