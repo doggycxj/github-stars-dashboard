@@ -361,7 +361,7 @@
     {
       "full_name": "affaan-m/ECC",
       "category": "ai",
-      "note": "橢圓曲線密碼學（Elliptic Curve Cryptography, ECC）的相關演算法實現、數學原理解析與加密示範。",
+      "note": "針對 AI 編碼代理（Claude Code、Codex、Opencode、Cursor 等）打造的效能優化系統，提供技能管理、記憶、安全性與研究導向開發等模組，強化代理的工作表現。",
       "description": "The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
       "stars": 235526,
       "language": "JavaScript",
@@ -511,7 +511,7 @@
     {
       "full_name": "openclaw/openclaw",
       "category": "ai",
-      "note": "開源的網路安全 AWD（攻防對抗）競賽系統核心，包含計分板、漏洞簽章驗證與流量監控等模組。",
+      "note": "個人化 AI 助理專案，訴求可在任何作業系統、任何裝置上運作並支援語音互動，讓使用者擁有一個完全屬於自己、可跨平台使用的 AI 助理。",
       "description": "Your own personal AI assistant. Any OS. Any Platform. The lobster way. 🦞 ",
       "stars": 384490,
       "language": "TypeScript",
@@ -1035,7 +1035,7 @@
     },
     {
       "full_name": "cheat-engine/cheat-engine",
-      "category": "winopt",
+      "category": "devtool",
       "note": "知名且強大的開源遊戲修改與記憶體除錯工具（Cheat Engine），常用於分析遊戲數據與記憶體結構。",
       "description": "Cheat Engine. A development environment focused on modding",
       "stars": 18828,
@@ -1395,7 +1395,7 @@
     },
     {
       "full_name": "KenneyNL/Adobe-Alternatives",
-      "category": "winopt",
+      "category": "learn",
       "note": "精心整理並列出各款 Adobe 旗下付費商業軟體（如 Photoshop、Premiere 等）之高質量免費及開源替代品的清單。",
       "description": "A list of alternatives for Adobe software",
       "stars": 9310,
@@ -2355,7 +2355,7 @@
     },
     {
       "full_name": "996icu/996.ICU",
-      "category": "learn",
+      "category": "misc",
       "note": "在 GitHub 上發起的反對中國互聯網公司非法人道 996 工作制（早9點到晚9點，每週6天）的開源維權與倡議運動專案。",
       "description": "Repo for counting stars and contributing. Press F to pay respect to glorious developers.",
       "stars": 276502,
@@ -3375,7 +3375,7 @@
     },
     {
       "full_name": "DIYgod/DPlayer",
-      "category": "twitch",
+      "category": "devtool",
       "note": "國產、精美、效能極佳且支援即時彈幕（Danmaku）播放的 HTML5 開源網頁視頻播放器。",
       "description": ":lollipop: Wow, such a lovely HTML5 danmaku video player",
       "stars": 16462,
@@ -3390,7 +3390,7 @@
     },
     {
       "full_name": "bilibili/DanmakuFlameMaster",
-      "category": "twitch",
+      "category": "devtool",
       "note": "嗶哩嗶哩（Bilibili）官方開源的 Android 平台高性能、低記憶體佔用彈幕渲染引擎框架（烈焰彈幕使）。",
       "description": "Android开源弹幕引擎·烈焰弹幕使 ～",
       "stars": 9612,
