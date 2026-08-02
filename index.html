@@ -41,8 +41,12 @@
 
   *{box-sizing:border-box;}
 
-  body, header, nav, footer, #search, #clearSearch, select#sort, .cat-btn, .num, .cat-tag, .release-tag, .empty, .led, .sec-head {
-    transition: background-color 0.3s ease, background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  /* 主題切換的順滑度取決於「所有元素是否用同一速度一起變色」。
+     原本只列了少數幾個 selector，導致沒被列到的元素（卡片內文字、
+     裡面的 owner/desc/card-foot…）會瞬間跳色，跟其他淡入淡出的元素
+     不同步，看起來就會卡卡的。改成套用到「所有元素」，統一速度。 */
+  *, *::before, *::after {
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, fill 0.25s ease;
   }
   
   ::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -66,7 +70,7 @@
   }
   .theme-toggle button{
     background:transparent; border:1px solid var(--border); color:var(--text3);
-    padding:4px 8px; font-size:14px; cursor:pointer; border-radius:var(--radius); transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    padding:4px 8px; font-size:14px; cursor:pointer; border-radius:var(--radius); transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
   }
   .theme-toggle button:hover{color:var(--text); border-color:var(--brand);}
   .theme-toggle button.active{background:var(--brand); color:#fff; border-color:var(--brand); font-weight:bold;}
@@ -142,7 +146,7 @@
   .grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:12px;}
   .card{
     background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius);
-    padding:14px 15px; display:flex; flex-direction:column; gap:7px; transition: transform .15s, box-shadow .15s, background-color 0.3s ease, border-color 0.3s ease;
+    padding:14px 15px; display:flex; flex-direction:column; gap:7px; transition: transform .15s ease, box-shadow .15s ease, background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
   }
   .card:hover{border-color:var(--brand); transform:translateY(-1px); box-shadow:var(--shadow);}
   .card-top{display:flex; align-items:flex-start; justify-content:space-between; gap:8px;}
