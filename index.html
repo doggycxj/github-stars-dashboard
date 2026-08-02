@@ -135,7 +135,7 @@
 
 <header>
   <div class="title">🗂️ GitHub Star 儀表板</div>
-  <input id="search" type="text" placeholder="搜尋 repo 名稱或描述…">
+  <input id="search" type="text" placeholder="搜尋全站 repo 名稱或描述…">
   <select id="sort">
     <option value="release">依最新 Release 排序</option>
     <option value="stars">依星數排序</option>
@@ -189,8 +189,20 @@ async function loadData(){
   return false;
 }
 
-function daysAgo(iso){ if(!iso) return Infinity; return (Date.now() - new Date(iso).getTime()) / 86400000; }
-function ledClass(iso){ if(!iso) return 'none'; const d = daysAgo(iso); if(d<=90) return 'fresh'; if(d<=365) return 'recent'; return 'stale'; }
+function ledClass(iso){
+  if(!iso || !DATA.generated_at) return 'none';
+  const genDate = new Date(DATA.generated_at);
+  const relDate = new Date(iso);
+  const diffTime = genDate.getTime() - relDate.getTime();
+  const diffDays = Math.floor(diffTime / (1000 * 3600 * 24));
+  
+  if(diffDays <= 7) return 'green';
+  if(diffDays <= 30) return 'yellow';
+  if(diffDays <= 90) return 'orange';
+  if(diffDays <= 180) return 'red';
+  if(diffDays <= 360) return 'gray';
+  return 'old';
+}
 function fmtDate(iso){ if(!iso) return null; return new Date(iso).toISOString().slice(0,10); }
 function escapeHtml(s){ if(!s) return ''; return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
@@ -198,12 +210,31 @@ function renderRack(){
   const rack = document.getElementById('rack');
   const cats = DATA.categories;
   const counts = {};
-  DATA.repos.forEach(r => counts[r.category] = (counts[r.category]||0)+1);
+  
+  // 初始化 pending 分類如果不存在
+  if (!cats['pending']) {
+      cats['pending'] = "待分類區";
+  }
+
+  // 處理 repo 的分類，根據 is_classified 標記
+  DATA.repos.forEach(r => {
+      // 假設未定義 is_classified 或為 false 代表未手動分類
+      const finalCategory = r.is_classified === true ? r.category : 'pending';
+      counts[finalCategory] = (counts[finalCategory] || 0) + 1;
+  });
 
   let html = `<div class="nav-title">分類</div>`;
   html += `<button class="cat-btn ${activeCategory==='all'?'active':''}" data-cat="all">
       <span>全部</span><span class="num">${String(DATA.repos.length).padStart(3,'0')}</span></button>`;
+  
+  // 為了確保 pending 排在最前面，先渲染 pending
+  if(counts['pending']){
+      html += `<button class="cat-btn ${activeCategory==='pending'?'active':''} pending-btn" data-cat="pending">
+          <span>待分類區</span><span class="num">${String(counts['pending']).padStart(3,'0')}</span></button>`;
+  }
+
   Object.keys(cats).forEach(id => {
+    if(id === 'pending') return; // 已經處理過
     if(!counts[id]) return;
     html += `<button class="cat-btn ${activeCategory===id?'active':''}" data-cat="${id}">
         <span>${escapeHtml(cats[id])}</span><span class="num">${String(counts[id]).padStart(3,'0')}</span></button>`;
@@ -219,12 +250,28 @@ function render(){
   const sortBy = document.getElementById('sort').value;
   const cats = DATA.categories;
 
-  let repos = DATA.repos.filter(r=>{
-    if(activeCategory !== 'all' && r.category !== activeCategory) return false;
+  // 過濾搜尋結果（全站搜尋）
+  let searchResults = DATA.repos.filter(r=>{
     if(!q) return true;
     return r.full_name.toLowerCase().includes(q) ||
            (r.description||'').toLowerCase().includes(q) ||
            (r.note||'').toLowerCase().includes(q);
+  });
+  
+  // 如果有搜尋關鍵字，自動切換到 'all' 分類
+  if (q && activeCategory !== 'all') {
+      activeCategory = 'all';
+      // 更新側邊欄樣式
+      document.querySelectorAll('#rack .cat-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.cat === 'all');
+      });
+  }
+
+  // 過濾分類
+  let repos = searchResults.filter(r=>{
+    const finalCategory = r.is_classified === true ? r.category : 'pending';
+    if(activeCategory !== 'all' && finalCategory !== activeCategory) return false;
+    return true;
   });
 
   document.getElementById('metaCount').innerHTML =
@@ -232,9 +279,14 @@ function render(){
     (DATA.generated_at ? ` · 更新於 ${fmtDate(DATA.generated_at)}` : ` · 尚未抓取 release`);
 
   const groups = {};
-  repos.forEach(r => { (groups[r.category] = groups[r.category]||[]).push(r); });
+  repos.forEach(r => { 
+      const finalCategory = r.is_classified === true ? r.category : 'pending';
+      (groups[finalCategory] = groups[finalCategory]||[]).push(r); 
+  });
 
-  const order = Object.keys(cats);
+  // 排序分類輸出順序：pending 在前，其餘按照 keys 順序
+  const order = ['pending', ...Object.keys(cats).filter(k => k !== 'pending')];
+  
   let main = '';
   order.forEach(catId=>{
     const list = groups[catId];
@@ -247,7 +299,7 @@ function render(){
       return db - da;
     });
 
-    main += `<section><div class="sec-head"><h2>${escapeHtml(cats[catId])}</h2><span class="count">${list.length}</span></div><div class="grid">`;
+    main += `<section><div class="sec-head"><h2>${escapeHtml(cats[catId] || catId)}</h2><span class="count">${list.length}</span></div><div class="grid">`;
 
     list.forEach(r=>{
       const [owner, repo] = r.full_name.split('/');
@@ -255,12 +307,18 @@ function render(){
         ? `<span class="release-tag">${escapeHtml(r.release_tag)}</span>`
         : `<span class="release-tag none">no release</span>`;
       const dateStr = fmtDate(r.release_date);
+      // 如果是全站搜尋或全部類別，顯示該 repo 所屬的類別標籤
+      const showCatTag = (activeCategory === 'all' && q) || activeCategory === 'all';
+      const finalCategory = r.is_classified === true ? r.category : 'pending';
+      const catName = escapeHtml(cats[finalCategory] || finalCategory);
+      
       main += `
         <a class="card" href="${r.html_url}" target="_blank" rel="noopener">
           <div class="card-top">
             <div class="repo-name"><span class="owner">${escapeHtml(owner)}/</span>${escapeHtml(repo)}</div>
             <div class="led ${ledClass(r.release_date)}" title="${dateStr ? '最新 release: '+dateStr : '無 release 紀錄'}"></div>
           </div>
+          ${showCatTag ? `<div class="cat-tag">${catName}</div>` : ''}
           <div class="desc">${escapeHtml(r.note || r.description) || '<span style="opacity:.5">（尚未取得描述）</span>'}</div>
           <div class="card-foot">
             ${tag}
