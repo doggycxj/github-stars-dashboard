@@ -58,13 +58,43 @@
   .theme-toggle button:hover{color:var(--text); border-color:var(--brand);}
   .theme-toggle button.active{background:var(--brand); color:#fff; border-color:var(--brand); font-weight:bold;}
 
+  .search-box{
+      position:relative;
+      flex:1;
+      min-width:180px;
+      max-width:420px;
+  }
+
   #search{
-    flex:1; min-width:180px; max-width:420px;
     background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius);
     color:var(--text); font-family:var(--font-mono); font-size:13px;
     padding:9px 12px; outline:none;
   }
   #search:focus{border-color:var(--brand);}
+  
+  .search-box #search{
+      width:100%;
+      padding-right:36px;
+  }
+
+  #clearSearch{
+      position:absolute;
+      right:8px;
+      top:50%;
+      transform:translateY(-50%);
+      display:none;
+      border:none;
+      background:transparent;
+      color:var(--text3);
+      cursor:pointer;
+      font-size:16px;
+      padding:2px 4px;
+  }
+
+  #clearSearch:hover{
+      color:var(--text);
+  }
+
   select#sort{
     background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius);
     color:var(--text); font-family:var(--font-mono); font-size:12px; padding:9px 10px;
@@ -135,7 +165,10 @@
 
 <header>
   <div class="title">🗂️ GitHub Star 儀表板</div>
-  <input id="search" type="text" placeholder="搜尋全站 repo 名稱或描述…">
+  <div class="search-box">
+      <input id="search" type="text" placeholder="搜尋全站 repo 名稱或描述…">
+      <button id="clearSearch" type="button">✕</button>
+  </div>
   <select id="sort">
     <option value="release">依最新 Release 排序</option>
     <option value="stars">依星數排序</option>
@@ -278,37 +311,36 @@ function render(){
     `<b>${repos.length}</b> / ${DATA.repos.length}` +
     (DATA.generated_at ? ` · 更新於 ${fmtDate(DATA.generated_at)}` : ` · 尚未抓取 release`);
 
-  const groups = {};
-  repos.forEach(r => { 
-      const finalCategory = r.is_classified === true ? r.category : 'pending';
-      (groups[finalCategory] = groups[finalCategory]||[]).push(r); 
+  // 全域排序
+  repos.sort((a,b)=>{
+    if(sortBy==='stars') return (b.stars||0)-(a.stars||0);
+    if(sortBy==='name') return a.full_name.localeCompare(b.full_name);
+    const da = a.release_date ? new Date(a.release_date).getTime() : -1;
+    const db = b.release_date ? new Date(b.release_date).getTime() : -1;
+    return db - da;
   });
 
-  // 排序分類輸出順序：pending 在前，其餘按照 keys 順序
-  const order = ['pending', ...Object.keys(cats).filter(k => k !== 'pending')];
-  
   let main = '';
-  order.forEach(catId=>{
-    const list = groups[catId];
-    if(!list || !list.length) return;
-    list.sort((a,b)=>{
-      if(sortBy==='stars') return (b.stars||0)-(a.stars||0);
-      if(sortBy==='name') return a.full_name.localeCompare(b.full_name);
-      const da = a.release_date ? new Date(a.release_date).getTime() : -1;
-      const db = b.release_date ? new Date(b.release_date).getTime() : -1;
-      return db - da;
-    });
+  if(repos.length > 0) {
+    let sectionTitle = '全部項目';
+    if (q) {
+        sectionTitle = '搜尋結果';
+    } else if (activeCategory !== 'all') {
+        sectionTitle = cats[activeCategory] || activeCategory;
+        if (activeCategory === 'pending') sectionTitle = '待分類區';
+    }
 
-    main += `<section><div class="sec-head"><h2>${escapeHtml(cats[catId] || catId)}</h2><span class="count">${list.length}</span></div><div class="grid">`;
+    main += `<section><div class="sec-head"><h2>${escapeHtml(sectionTitle)}</h2><span class="count">${repos.length}</span></div><div class="grid">`;
 
-    list.forEach(r=>{
+    repos.forEach(r=>{
       const [owner, repo] = r.full_name.split('/');
       const tag = r.release_tag
         ? `<span class="release-tag">${escapeHtml(r.release_tag)}</span>`
         : `<span class="release-tag none">no release</span>`;
       const dateStr = fmtDate(r.release_date);
+      
       // 如果是全站搜尋或全部類別，顯示該 repo 所屬的類別標籤
-      const showCatTag = (activeCategory === 'all' && q) || activeCategory === 'all';
+      const showCatTag = activeCategory === 'all';
       const finalCategory = r.is_classified === true ? r.category : 'pending';
       const catName = escapeHtml(cats[finalCategory] || finalCategory);
       
@@ -328,7 +360,7 @@ function render(){
         </a>`;
     });
     main += `</div></section>`;
-  });
+  }
 
   document.getElementById('main').innerHTML = main || `<div class="empty">沒有符合的結果</div>`;
 }
@@ -346,6 +378,21 @@ async function init(){
   }
   renderRack();
   render();
+  
+  const search = document.getElementById("search");
+  const clear = document.getElementById("clearSearch");
+
+  search.addEventListener("input", () => {
+      clear.style.display = search.value ? "block" : "none";
+  });
+
+  clear.addEventListener("click", () => {
+      search.value = "";
+      clear.style.display = "none";
+      search.focus();
+      render();
+  });
+
   document.getElementById('search').addEventListener('input', render);
   document.getElementById('sort').addEventListener('change', render);
   document.getElementById('footerMeta').textContent =
