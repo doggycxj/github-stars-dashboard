@@ -41,12 +41,12 @@
 
   *{box-sizing:border-box;}
 
-  /* 主題切換的順滑度取決於「所有元素是否用同一速度一起變色」。
-     原本只列了少數幾個 selector，導致沒被列到的元素（卡片內文字、
-     裡面的 owner/desc/card-foot…）會瞬間跳色，跟其他淡入淡出的元素
-     不同步，看起來就會卡卡的。改成套用到「所有元素」，統一速度。 */
-  *, *::before, *::after {
-    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, fill 0.25s ease;
+  /* 主題切換的順滑：不能永久對所有元素掛 transition（卡片一多，
+     瀏覽器要追蹤幾千個節點的過渡屬性，搜尋打字時整個重繪就會卡）。
+     改成只在按下切換鈕的瞬間，由 JS 幫 <html> 加上這個 class，
+     過渡跑完（.25s）馬上移除，平常完全沒有 transition 負擔。 */
+  html.theme-transitioning, html.theme-transitioning *, html.theme-transitioning *::before, html.theme-transitioning *::after {
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease !important;
   }
   
   ::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -211,16 +211,23 @@
 /* ---------- 主題切換（自成一套，不依賴任何外部檔案） ---------- */
 (function(){
   var buttons = document.querySelectorAll('[data-theme-btn]');
-  function apply(theme){
-    document.documentElement.setAttribute('data-theme', theme);
+  var transitionTimer = null;
+  function apply(theme, animate){
+    var root = document.documentElement;
+    if(animate){
+      root.classList.add('theme-transitioning');
+      clearTimeout(transitionTimer);
+      transitionTimer = setTimeout(function(){ root.classList.remove('theme-transitioning'); }, 300);
+    }
+    root.setAttribute('data-theme', theme);
     localStorage.setItem('stars-theme', theme);
     buttons.forEach(function(b){
       b.classList.toggle('active', b.dataset.themeBtn === theme);
     });
   }
-  apply(localStorage.getItem('stars-theme') || 'light');
+  apply(localStorage.getItem('stars-theme') || 'light', false);
   buttons.forEach(function(b){
-    b.addEventListener('click', function(){ apply(b.dataset.themeBtn); });
+    b.addEventListener('click', function(){ apply(b.dataset.themeBtn, true); });
   });
 })();
 
