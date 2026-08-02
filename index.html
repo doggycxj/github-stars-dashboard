@@ -307,8 +307,9 @@ function render(){
     return true;
   });
 
+  const totalLen = String(DATA.repos.length).length;
   document.getElementById('metaCount').innerHTML =
-    `<b>${repos.length}</b> / ${DATA.repos.length}` +
+    `<b style="display:inline-block; width:${totalLen}ch; text-align:right;">${repos.length}</b> / ${DATA.repos.length}` +
     (DATA.generated_at ? ` · 更新於 ${fmtDate(DATA.generated_at)}` : ` · 尚未抓取 release`);
 
   // 全域排序
