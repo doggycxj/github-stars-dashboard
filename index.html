@@ -41,12 +41,13 @@
 
   *{box-sizing:border-box;}
 
-  /* 主題切換的順滑：不能永久對所有元素掛 transition（卡片一多，
-     瀏覽器要追蹤幾千個節點的過渡屬性，搜尋打字時整個重繪就會卡）。
-     改成只在按下切換鈕的瞬間，由 JS 幫 <html> 加上這個 class，
-     過渡跑完（.25s）馬上移除，平常完全沒有 transition 負擔。 */
-  html.theme-transitioning, html.theme-transitioning *, html.theme-transitioning *::before, html.theme-transitioning *::after {
-    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease !important;
+  /* 主題切換用 View Transitions API（見下方 script）：瀏覽器把切換前後
+     的畫面各拍一張截圖，用 GPU 疊圖淡入淡出，成本跟頁面有幾個節點無關，
+     卡片再多也不會卡。這裡只需要設定淡入淡出的速度即可。
+     不支援的舊瀏覽器（如較舊的 Firefox）會直接跳過動畫、瞬間切換，
+     一樣不會有部分元素跳色、部分淡入的不同步問題。 */
+  ::view-transition-old(root), ::view-transition-new(root) {
+    animation-duration: 0.25s;
   }
   
   ::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -70,7 +71,7 @@
   }
   .theme-toggle button{
     background:transparent; border:1px solid var(--border); color:var(--text3);
-    padding:4px 8px; font-size:14px; cursor:pointer; border-radius:var(--radius); transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+    padding:4px 8px; font-size:14px; cursor:pointer; border-radius:var(--radius);
   }
   .theme-toggle button:hover{color:var(--text); border-color:var(--brand);}
   .theme-toggle button.active{background:var(--brand); color:#fff; border-color:var(--brand); font-weight:bold;}
@@ -146,7 +147,7 @@
   .grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:12px;}
   .card{
     background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius);
-    padding:14px 15px; display:flex; flex-direction:column; gap:7px; transition: transform .15s ease, box-shadow .15s ease, background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+    padding:14px 15px; display:flex; flex-direction:column; gap:7px; transition: transform .15s ease, box-shadow .15s ease;
   }
   .card:hover{border-color:var(--brand); transform:translateY(-1px); box-shadow:var(--shadow);}
   .card-top{display:flex; align-items:flex-start; justify-content:space-between; gap:8px;}
@@ -211,19 +212,19 @@
 /* ---------- 主題切換（自成一套，不依賴任何外部檔案） ---------- */
 (function(){
   var buttons = document.querySelectorAll('[data-theme-btn]');
-  var transitionTimer = null;
-  function apply(theme, animate){
-    var root = document.documentElement;
-    if(animate){
-      root.classList.add('theme-transitioning');
-      clearTimeout(transitionTimer);
-      transitionTimer = setTimeout(function(){ root.classList.remove('theme-transitioning'); }, 300);
-    }
-    root.setAttribute('data-theme', theme);
+  function setTheme(theme){
+    document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('stars-theme', theme);
     buttons.forEach(function(b){
       b.classList.toggle('active', b.dataset.themeBtn === theme);
     });
+  }
+  function apply(theme, animate){
+    if(animate && document.startViewTransition){
+      document.startViewTransition(function(){ setTheme(theme); });
+    }else{
+      setTheme(theme);
+    }
   }
   apply(localStorage.getItem('stars-theme') || 'light', false);
   buttons.forEach(function(b){
