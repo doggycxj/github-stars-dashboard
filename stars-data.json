@@ -4592,7 +4592,7 @@
                   {
                       "full_name":  "Diniboy1123/usque",
                       "category":  "vpn",
-                      "note":  "Cloudflare WARP 客戶端 MASQUE 協議的開源重新實作（Go），可不依賴官方客戶端註冊並連線 WARP。",
+                      "note":  "Cloudflare WARP 客戶端 MASQUE 模式的開源重新實作（Go），基於 Connect-IP（RFC 9484），提供原生隧道、SOCKS5、HTTP 代理等多種運作模式。",
                       "is_classified":  true,
                       "description":  "Open-source reimplementation of the Cloudflare WARP client\u0027s MASQUE protocol. ",
                       "stars":  1460,
@@ -4656,7 +4656,7 @@
                   {
                       "full_name":  "ptt/pttbbs",
                       "category":  "misc",
-                      "note":  "批踢踢實業坊（PTT BBS）的 C 語言原始碼，可用來研究或架設 BBS 站台。",
+                      "note":  "批踢踢實業坊（PTT BBS）核心系統原始碼（GPL v2），附安裝與 FAQ 文件，可用來研究或架設 BBS 站台。",
                       "is_classified":  true,
                       "description":  "PTT BBS source code",
                       "stars":  1185,
@@ -4672,7 +4672,7 @@
                   {
                       "full_name":  "trailofbits/algo",
                       "category":  "vpn",
-                      "note":  "Trail of Bits 出品的自架個人 VPN 腳本，一鍵在雲端主機部署安全的 WireGuard / IPsec 服務。",
+                      "note":  "Trail of Bits 出品的 Ansible 腳本，用最安全的預設值在常見雲端主機上快速架設個人 WireGuard 與 IPsec VPN。",
                       "is_classified":  true,
                       "description":  "Set up a personal VPN in the cloud",
                       "stars":  30410,
@@ -4704,7 +4704,7 @@
                   {
                       "full_name":  "cloudflare/computer",
                       "category":  "ai",
-                      "note":  "Cloudflare 提供的專案，讓 AI Agent 擁有一台可操作的「電腦」環境來執行任務。",
+                      "note":  "Cloudflare Computer：存放在 Durable Object 內的虛擬檔案系統（狀態存於 SQLite），可掛載到容器或在 Worker isolate 中執行，供 AI Agent 作為工作空間。",
                       "is_classified":  true,
                       "description":  "Give your agent a computer 👾",
                       "stars":  9490,
@@ -4736,7 +4736,7 @@
                   {
                       "full_name":  "Unclecheng-li/AI_Animation",
                       "category":  "ai",
-                      "note":  "整理用於生成炫酷 HTML 動畫網頁的 AI 提示詞，涵蓋動畫效果、3D 視覺化、PPT 風格演示與 UI 美化等類別。",
+                      "note":  "一套用 AI 生成炫酷單檔 HTML 動畫的 Agent Skills 集合，涵蓋 PPT 風格演示、流程圖、網路協議視覺化、動態架構圖等，適用 Claude Code / Cursor 等 Agent。",
                       "is_classified":  true,
                       "description":  "本项目整理了用于生成[炫酷 HTML 动画网页]的 AI Prompts，涵盖动画效果、3D 可视化、PPT 风格演示、UI 美化等多个类别。",
                       "stars":  1447,
@@ -4752,7 +4752,7 @@
                   {
                       "full_name":  "Unclecheng-li/DeepSec",
                       "category":  "ai",
-                      "note":  "AI 安全攻防平台，其中 Shield 可稽核 AI 生成的程式碼，檢查幻覺套件等安全風險。",
+                      "note":  "AI 安全攻防平台：Shield 稽核 AI 生成的程式碼漏洞，Spear 提供授權滲透測試，整合 CLI、TUI 終端工作台與 IDE 外掛。",
                       "is_classified":  true,
                       "description":  "DeepSec — AI Security Offense \u0026 Defense Platform. Shield audits AI-generated code for hallucinated packages, missing safeguards \u0026 AI pattern errors in real time. Spear automates authorized penetration testing with 40+ skill packs, from recon to PoC. ",
                       "stars":  459,
@@ -4768,7 +4768,7 @@
                   {
                       "full_name":  "emilkowalski/skills",
                       "category":  "misc",
-                      "note":  "為設計師與工程師整理的 Skills（技能）集合，供 AI 助手在介面與前端設計工作中使用。",
+                      "note":  "前端設計師 Emil Kowalski 依其在 Vercel、Linear 的經驗整理的 Skills，協助設計師與工程師在動畫與介面設計上做出更好的決策。",
                       "is_classified":  true,
                       "description":  "Skills for Designers and Engineers.",
                       "stars":  43862,
@@ -4832,7 +4832,7 @@
                   {
                       "full_name":  "rosalyntg/srt-rs",
                       "category":  "media",
-                      "note":  "以 Rust 實作的 SRT（Secure Reliable Transport）低延遲串流傳輸協議函式庫。",
+                      "note":  "純 Rust 實作（不含 unsafe）的 SRT（Secure Reliable Transport）協議函式庫，已支援收發、加密與擁塞控制，但作者註明尚未達生產可用。",
                       "is_classified":  true,
                       "description":  "SRT implementation in Rust",
                       "stars":  282,
@@ -4848,7 +4848,7 @@
                   {
                       "full_name":  "deepseek-ai/deepseek-harness",
                       "category":  "ai",
-                      "note":  "DeepSeek 推出的 Harness 框架，主打「一切皆插件」，用於組裝與擴充 AI Agent 能力。",
+                      "note":  "DeepSeek 官方開源的 Agent Harness（dsh），採「一切皆插件」架構、由 Cordis 驅動，可用 npx 啟動 Web UI；目前為開發者預覽版，可能有破壞性變更。",
                       "is_classified":  true,
                       "description":  "DeepSeek Harness: Everything is a Plugin.",
                       "stars":  244492,
@@ -4864,7 +4864,7 @@
                   {
                       "full_name":  "linsa-io/linsa",
                       "category":  "misc",
-                      "note":  "強調隱私的個人知識工具，用於工作內容的整理、儲存與分享。",
+                      "note":  "以端對端加密儲存各類數位內容、僅本人可存取的個人服務；作者表示目前尚未公開開發，日後才會開源。",
                       "is_classified":  true,
                       "description":  "Work. Save. Share. Privately.",
                       "stars":  16857,
@@ -4896,7 +4896,7 @@
                   {
                       "full_name":  "WireGuard/wintun",
                       "category":  "vpn",
-                      "note":  "WireGuard 團隊開發的 Windows 第三層 TUN 虛擬網卡驅動，供各類 VPN／代理軟體建立 TUN 模式使用。",
+                      "note":  "WireGuard 團隊開發的 Windows 第三層 TUN 驅動（wintun.dll），支援 Windows 7 到 11，供各類 VPN／代理軟體建立 TUN 虛擬網卡。",
                       "is_classified":  true,
                       "description":  "Mirror only. Official repository is at https://git.zx2c4.com/wintun",
                       "stars":  567,
@@ -4912,7 +4912,7 @@
                   {
                       "full_name":  "LYiHub/Card-master-browser-extension-public",
                       "category":  "misc",
-                      "note":  "卡牌遊戲瀏覽器擴充功能，可把各種瀏覽器腳本或擴充做成可玩的卡牌，並用 AI 自動生成新卡牌插件。",
+                      "note":  "「卡牌大師」瀏覽器擴充功能（林亦LYi 出品）：把使用者腳本與網頁功能做成卡牌統一管理，含 AI 腳本生成、去廣告、影片增強、倍速與 WebDAV 同步。",
                       "is_classified":  true,
                       "description":  "一个卡牌游戏浏览器扩展，可以把各种浏览器脚本、扩展做成可游玩的卡牌，还可以用AI自动生成全新卡牌插件",
                       "stars":  421,
@@ -4928,7 +4928,7 @@
                   {
                       "full_name":  "stablyai/orca",
                       "category":  "ai",
-                      "note":  "Orca 是管理多個並行 AI Agent 的開發環境（ADE），可搭配自己的訂閱執行任意 coding agent。",
+                      "note":  "AI Agent 協調器：可並行執行 Codex、Claude Code、OpenCode 等，每個 Agent 各用獨立 git worktree，並在同一處追蹤與比較結果。",
                       "is_classified":  true,
                       "description":  "Orca is the ADE for working with a fleet of parallel agents. Run any coding agent with your own subscription. Available on desktop, mobile and remote runtime.",
                       "stars":  86370,
@@ -4944,7 +4944,7 @@
                   {
                       "full_name":  "files-community/Files",
                       "category":  "winopt",
-                      "note":  "現代化的 Windows 檔案管理員（Files App），提供分頁、多窗格與美觀介面，用來整理檔案與資料夾。",
+                      "note":  "現代化的 Windows 檔案管理員（Files App），用來整理檔案與資料夾（README 未能抓取，依 repo 描述撰寫）。",
                       "is_classified":  true,
                       "description":  "A modern file manager that helps users organize their files and folders.",
                       "stars":  45834,
@@ -4960,7 +4960,7 @@
                   {
                       "full_name":  "cloudflare/skills",
                       "category":  "misc",
-                      "note":  "教 AI Agent 如何在 Cloudflare 平台上建置應用的 Skills 集合（Workers、Pages 等）。",
+                      "note":  "教 AI Agent 在 Cloudflare 平台（Workers、Agents SDK 等）上建置應用的 Agent Skills 集合，可用 Codex、Claude Code 等的外掛市集安裝。",
                       "is_classified":  true,
                       "description":  "Skills for teaching agents how to build on Cloudflare.",
                       "stars":  2994,
@@ -4976,7 +4976,7 @@
                   {
                       "full_name":  "phosphor-icons/homepage",
                       "category":  "misc",
-                      "note":  "Phosphor Icons 官方網站原始碼，展示並提供這套彈性圖示家族的瀏覽與下載。",
+                      "note":  "Phosphor Icons 官方網站原始碼，這是一套有 6 種字重（Thin 到 Duotone）、超過 1200 個圖示的彈性圖示家族。",
                       "is_classified":  true,
                       "description":  "The homepage of Phosphor Icons, a flexible icon family for everyone",
                       "stars":  7608,
@@ -5024,7 +5024,7 @@
                   {
                       "full_name":  "jakemiki/twitch-clip-queue",
                       "category":  "twitch",
-                      "note":  "免設定的 Twitch 實況剪輯（Clip）隊列工具，讓實況主依序播放觀眾投稿的剪輯。",
+                      "note":  "免設定的 Twitch 剪輯（Clip）隊列網頁工具，讓實況主依序播放觀眾投稿的剪輯（README 為 CRA 預設內容，依 repo 描述撰寫）。",
                       "is_classified":  true,
                       "description":  "A simple, setup free clip queue for all your Twitch clip queueing needs",
                       "stars":  127,
@@ -5056,7 +5056,7 @@
                   {
                       "full_name":  "YerongAI/Office-Tool",
                       "category":  "misc",
-                      "note":  "Office Tool Plus 的在地化專案，用於部署、啟用與管理 Microsoft Office 的工具介面翻譯。",
+                      "note":  "Office Tool Plus 的在地化專案：Office 部署工具，可自訂安裝、下載任意語言與更新通道的 Microsoft 365 / Office / Visio / Project，並協助啟用。",
                       "is_classified":  true,
                       "description":  "Office Tool Plus localization projects.",
                       "stars":  14429,
@@ -5072,7 +5072,7 @@
                   {
                       "full_name":  "ddaccu/twitch-2k-unlocker",
                       "category":  "twitch",
-                      "note":  "解鎖 Twitch 的 QHD（2K）解析度選項的腳本／擴充功能。",
+                      "note":  "Chrome 擴充功能，免 VPN 解鎖 Twitch 的 2K（1440p）畫質：僅透過自行部署的 Cloudflare Worker 代理播放清單中繼資料，影片串流仍直連。",
                       "is_classified":  true,
                       "description":  "qhd unlocker for twitch",
                       "stars":  19,
@@ -5088,7 +5088,7 @@
                   {
                       "full_name":  "ntupm18th/ntupm-songguesser",
                       "category":  "misc",
-                      "note":  "台大流行音樂演唱社第 18 屆社團聯展攤位用的「金曲猜歌王」網頁猜歌遊戲。",
+                      "note":  "台大流行音樂演唱社第 18 屆社團聯展用的猜歌網頁遊戲：聽 15 秒歌曲、從 9 個選項猜歌名，有競速與闖關兩種模式，聯展後仍可線上遊玩。",
                       "is_classified":  true,
                       "description":  "金曲猜歌王 — 台大流行音樂演唱社 18th 社團聯展攤位猜歌遊戲",
                       "stars":  2,
@@ -5104,7 +5104,7 @@
                   {
                       "full_name":  "amnezia-vpn/amnezia-client",
                       "category":  "vpn",
-                      "note":  "Amnezia VPN 客戶端（桌面與行動版），可自架伺服器並使用抗封鎖的 VPN 協議。",
+                      "note":  "開源 VPN 客戶端（桌面與行動版），特色是可在自己的伺服器上部署 VPN，主打自架與抗封鎖。",
                       "is_classified":  true,
                       "description":  "Amnezia VPN Client (Desktop+Mobile)",
                       "stars":  15350,
@@ -5120,7 +5120,7 @@
                   {
                       "full_name":  "MetaCubeX/Meta-Docs",
                       "category":  "misc",
-                      "note":  "Mihomo（Clash Meta）內核的官方文檔原始碼，包含設定檔語法、代理協議與規則說明。",
+                      "note":  "Mihomo（Clash Meta）內核的文檔站原始碼，以 MkDocs 建置，內容為設定檔與協議說明。",
                       "is_classified":  true,
                       "description":  null,
                       "stars":  201,
@@ -5136,7 +5136,7 @@
                   {
                       "full_name":  "MetaCubeX/ClashMetaForAndroid",
                       "category":  "vpn",
-                      "note":  "以 Mihomo（Clash Meta）內核為基礎的 Android 規則式代理客戶端。",
+                      "note":  "Clash.Meta（Mihomo）內核的 Android 圖形介面客戶端，支援 Android 5.0 以上。",
                       "is_classified":  true,
                       "description":  "A rule-based tunnel for Android.",
                       "stars":  47226,
@@ -5152,7 +5152,7 @@
                   {
                       "full_name":  "John19187/The-40-Best-VPNs",
                       "category":  "vpn",
-                      "note":  "整理 40 款 VPN／機場的推薦與評測指南，含解鎖串流平台與 Clash、V2Ray 等客戶端相容資訊。",
+                      "note":  "整理 40 多家「機場」（付費代理訂閱）的推薦指南，依穩定性、速度、性價比與串流／AI 解鎖能力比較，並附價格與服務狀態。",
                       "is_classified":  true,
                       "description":  "2026年稳定高速VPN推荐：40款性价比翻墙梯子完全指南，每周核查跑路与价格。翻墙梯子/科学上网/机场测评，解锁 YouTube、Netflix、TikTok、ChatGPT，适用 Clash、V2ray、小火箭、sing-box，支持 Windows、Mac、iOS、安卓、路由器",
                       "stars":  1798,
@@ -5168,7 +5168,7 @@
                   {
                       "full_name":  "alireza0/s-ui",
                       "category":  "vpn",
-                      "note":  "為 SagerNet/Sing-Box 打造的進階網頁管理面板，用於管理節點、使用者與訂閱。",
+                      "note":  "基於 SagerNet/Sing-Box 的進階網頁管理面板；作者聲明僅供個人學習交流，不建議用於正式環境。",
                       "is_classified":  true,
                       "description":  "An advanced Web Panel • Built for SagerNet/Sing-Box",
                       "stars":  10010,
@@ -5184,7 +5184,7 @@
                   {
                       "full_name":  "zhihui-hu/one-ip",
                       "category":  "media",
-                      "note":  "一站式 IP 與網路診斷工具箱，可查詢 IP 歸屬、ASN、信譽與風險，並檢測出口、DNS/CDN 與瀏覽器指紋。",
+                      "note":  "IP 查詢、網路診斷、瀏覽器檢測與 AI 服務狀態工具箱，可一鍵部署到 Cloudflare Workers，基礎功能不需 API Key。",
                       "is_classified":  true,
                       "description":  "瞬息洞察 IP 纯净底色与风险评级。仅需一键探寻，物理坐标、机房源流与代理轨迹尽收眼底。一站式 IP 与网络诊断工具箱：查询归属、ASN、信誉与风险，检测网络出口、DNS/CDN、浏览器指纹与 WebRTC，聚合 AI 服务状态。",
                       "stars":  1034,
@@ -5200,7 +5200,7 @@
                   {
                       "full_name":  "KJGX66F/usque-custom-pro",
                       "category":  "vpn",
-                      "note":  "基於 Cloudflare WARP / MASQUE 的視覺化註冊與設定產生工具，可轉換為 Clash/Mihomo、Shadowrocket、sing-box 等格式。",
+                      "note":  "Usque MASQUE Pro：基於 Cloudflare WARP / MASQUE 的瀏覽器可視化註冊與設定產生工具，可部署於 Cloudflare Pages 或 Workers，輸出 Clash/Mihomo、Shadowrocket、sing-box 等格式。",
                       "is_classified":  true,
                       "description":  "基于 Cloudflare WARP / MASQUE 的可视化注册、配置生成与多客户端转换工具。 生成、Clash/Mihomo 智能分流、Shadowrocket、sing-box、本地 VLESS 桥接，以及可选的 WARP 出口检测。",
                       "stars":  1473,
@@ -5216,7 +5216,7 @@
                   {
                       "full_name":  "byJoey/warp-masque-actions",
                       "category":  "vpn",
-                      "note":  "以 GitHub Actions 自動產生 Cloudflare WARP（MASQUE）金鑰與 mihomo 設定，產物僅保存在 artifact。",
+                      "note":  "在 GitHub Actions 上一鍵產生 Cloudflare WARP（MASQUE）的 mihomo 設定（57 個節點），Fork 後執行即可，產物只存放在 artifact。",
                       "is_classified":  true,
                       "description":  "GitHub Actions 自动生成 Cloudflare WARP (MASQUE) 密钥与 mihomo 配置，产物只存 artifact",
                       "stars":  1016,
@@ -5232,7 +5232,7 @@
                   {
                       "full_name":  "bepass-org/oblivion-desktop",
                       "category":  "vpn",
-                      "note":  "Oblivion Desktop：非官方 Warp 客戶端，支援 Windows / Mac / Linux。",
+                      "note":  "Oblivion Desktop：非官方的 Cloudflare WARP 桌面客戶端（Windows / Mac / Linux），以 Go 自製 WireGuard 實作。",
                       "is_classified":  true,
                       "description":  "Oblivion Desktop - Unofficial Warp Client for Windows/Mac/Linux",
                       "stars":  8393,
@@ -5248,7 +5248,7 @@
                   {
                       "full_name":  "CluvexStudio/Aether",
                       "category":  "misc",
-                      "note":  "Rust 撰寫的使用者空間 WARP 核心，針對受審查網路，以 HTTP/3 與 HTTP/2 上的 MASQUE 為基礎。",
+                      "note":  "針對嚴重受限網路的抗審查客戶端（Rust）：自動探索可用路由、建立加密隧道，並提供本機 SOCKS5 代理供應用程式使用。",
                       "is_classified":  true,
                       "description":  "A Rust userspace WARP core for censored networks, built around MASQUE over HTTP/3 and HTTP/2.",
                       "stars":  2102,
